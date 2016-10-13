@@ -143,6 +143,10 @@ function init() {
   container.appendChild(renderer.domElement);
 
   stats = new Stats();
+  stats.domElement.style.bottom = '0px';
+  stats.domElement.style.right = '0px'
+  stats.domElement.style.left = ''
+  stats.domElement.style.top = '';
   container.appendChild(stats.dom);
 
   document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -158,6 +162,7 @@ function setupGui() {
     speed: 5
   };
   var gui = new dat.GUI();
+  gui.domElement.style.marginRight = '0px';
   gui.add( effectController, "speed", 0.0, 100.0 ).name("speed");
 }
 
