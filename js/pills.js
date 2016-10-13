@@ -8,6 +8,8 @@ var camera, scene, renderer;
 
 var mouse;
 
+var clock = new THREE.Clock();
+
 var PI2 = Math.PI * 2;
 var PARTICLE_COUNT = 50;
 var PILL_BODY_HEIGHT = 40;
@@ -171,12 +173,15 @@ function animate() {
 
 var radius = 600;
 var theta = 0;
+var theta_delta_per_sec = 15;
 
 function render() {
+  var delta = clock.getDelta();
+  console.log(delta);
 
   // rotate camera
 
-  theta += 0.1;
+  theta += delta * theta_delta_per_sec;
 
   camera.position.x = radius * Math.sin(THREE.Math.degToRad(theta));
   camera.position.y = radius * Math.sin(THREE.Math.degToRad(theta));
