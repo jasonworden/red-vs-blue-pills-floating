@@ -6,7 +6,8 @@ var camera, scene, renderer;
 //removed interactivity:
 // var raycaster;
 
-var mouse;
+// var mouse;
+var effectController;
 
 var clock = new THREE.Clock();
 
@@ -16,26 +17,27 @@ var PILL_BODY_HEIGHT = 40;
 var PILL_RADIUS = 15;
 var PILL_SEGMENTS = 32;
 
-var programFill = function(context) {
+// var programFill = function(context) {
+//
+//   context.beginPath();
+//   context.arc(0, 0, 0.5, 0, PI2, true);
+//   context.fill();
+//
+// };
+//
+// var programStroke = function(context) {
+//
+//   context.lineWidth = 0.025;
+//   context.beginPath();
+//   context.arc(0, 0, 0.5, 0, PI2, true);
+//   context.stroke();
+//
+// };
 
-  context.beginPath();
-  context.arc(0, 0, 0.5, 0, PI2, true);
-  context.fill();
-
-};
-
-var programStroke = function(context) {
-
-  context.lineWidth = 0.025;
-  context.beginPath();
-  context.arc(0, 0, 0.5, 0, PI2, true);
-  context.stroke();
-
-};
-
-var INTERSECTED;
+// var INTERSECTED;
 
 init();
+setupGui();
 animate();
 
 function init() {
@@ -76,7 +78,8 @@ function init() {
   var particle, cylinder, sphere, material, scaleFactor;
 
   //create half-half colored pills
-  for (var i = 0; i < PARTICLE_COUNT/2; ++i) {
+
+  for (var i = 0; i < PARTICLE_COUNT/3; ++i) {
     particle = new THREE.Object3D();
 
     for(var j = 0; j < 2; ++j) {
@@ -102,8 +105,9 @@ function init() {
   }
 
   //create whole colored pills
+
   var materialIndex;
-  for (var i = 0; i < PARTICLE_COUNT/2; ++i) {
+  for (var i = 0; i < PARTICLE_COUNT/3*2; ++i) {
     material = materials[i % 2];
     particle = new THREE.Object3D();
 
@@ -149,6 +153,14 @@ function init() {
 
 }
 
+function setupGui() {
+  effectController = {
+    speed: 5
+  };
+  var gui = new dat.GUI();
+  gui.add( effectController, "speed", 0.0, 100.0 ).name("speed");
+}
+
 function onWindowResize() {
 
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -180,15 +192,14 @@ function animate() {
 
 var radius = 600;
 var theta = 0;
-var theta_delta_per_sec = 15;
 
 function render() {
-  var delta = clock.getDelta();
-  console.log(delta);
+  var delta_sec = clock.getDelta();
 
   // rotate camera
+  var deg_delta_per_sec = effectController.speed / 100 * 360;
 
-  theta += delta * theta_delta_per_sec;
+  theta += delta_sec * deg_delta_per_sec;
 
   camera.position.x = radius * Math.sin(THREE.Math.degToRad(theta));
   camera.position.y = radius * Math.sin(THREE.Math.degToRad(theta));
