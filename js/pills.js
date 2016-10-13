@@ -3,6 +3,9 @@
 var container, stats;
 var camera, scene, renderer;
 
+var SHADOW_MAP_WIDTH = 2048,
+  SHADOW_MAP_HEIGHT = 2048;
+
 //removed interactivity:
 // var raycaster;
 
@@ -51,16 +54,45 @@ function init() {
   scene = new THREE.Scene();
 
   // add lighting
-	// scene.fog = new THREE.Fog( 0xAAAAAA, 3000, 5000 );
-	scene.add( new THREE.AmbientLight( 0x777777 ) );
+  // scene.fog = new THREE.Fog( 0xAAAAAA, 3000, 5000 );
+  scene.add( new THREE.AmbientLight( 0x777777 ) );
 
-	var light = new THREE.DirectionalLight( 0xFFFFFF, 0.9 );
-	light.position.set( 200, 500, 500 );
-	scene.add( light );
+  var light = new THREE.DirectionalLight( 0xFFFFFF, 0.9 );
+  light.position.set( 200, 500, 500 );
+  light.castShadow = true;
+  light.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera( 50, 1, 1200, 2500 ) );
+  // light.shadow.bias = 0.0003;
+  // light.shadow.mapSize.width = SHADOW_MAP_WIDTH;
+  // light.shadow.mapSize.height = SHADOW_MAP_HEIGHT;
+  // light.shadowDarkness = .7;
+  // light.shadowCameraVisible = true;
+  scene.add( light );
 
-	light = new THREE.DirectionalLight( 0xFFFFFF, 0.3 );
-	light.position.set( -200, -100, -400 );
-	scene.add( light );
+  light = new THREE.DirectionalLight( 0xFFFFFF, 0.3 );
+  light.position.set( -200, -100, -400 );
+  light.castShadow = true;
+  light.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera( 50, 1, 1200, 2500 ) );
+  // light.shadow.bias = 0.0003;
+  // light.shadow.mapSize.width = SHADOW_MAP_WIDTH;
+  // light.shadow.mapSize.height = SHADOW_MAP_HEIGHT;
+  // light.shadowDarkness = .7;
+  // light.shadowCameraVisible = true;
+  scene.add( light );
+
+  // var solidGround = new THREE.Mesh(
+	// 	new THREE.PlaneGeometry(10000, 10000, 100, 100),
+	// 	new THREE.MeshPhongMaterial({
+	// 	color		: 0x66aa66,
+	// 	shininess	: 150,
+	// 	specular	: 0x888888,
+	// 	shading		: THREE.SmoothShading
+	// 	// map		: texture
+	// })
+	// );
+  // solidGround.receiveShadow = true;
+	// solidGround.rotation.x = - Math.PI / 2;
+  //
+	// scene.add( solidGround );
 
   var materialRed = new THREE.MeshPhongMaterial({
     color: 0xff0000,
@@ -76,6 +108,7 @@ function init() {
   var cylinderGeometry = new THREE.CylinderGeometry(PILL_RADIUS, PILL_RADIUS, PILL_BODY_HEIGHT, PILL_SEGMENTS);
   var sphereGeometry = new THREE.SphereGeometry(PILL_RADIUS, PILL_SEGMENTS, PILL_SEGMENTS);
   var particle, cylinder, sphere, material, scaleFactor;
+  var particles = [];
 
   //create half-half colored pills
 
@@ -94,17 +127,7 @@ function init() {
       particle.add(sphere);
     }
 
-    particle.position.x = Math.random() * 800 - 400;
-    particle.position.y = Math.random() * 800 - 400;
-    particle.position.z = Math.random() * 800 - 400;
-
-    scaleFactor = Math.random() * 2 + 1;
-    particle.scale.set(scaleFactor, scaleFactor, scaleFactor);
-
-    particle.castShadow = true;
-    particle.receiveShadow = true;
-
-    scene.add(particle);
+    particles.push(particle);
   }
 
   //create whole colored pills
@@ -123,6 +146,12 @@ function init() {
       particle.add(sphere);
     }
 
+    particles.push(particle);
+  }
+
+  for(var i = 0, iLen=particles.length; i < iLen; ++i) {
+    particle = particles[i];
+
     particle.position.x = Math.random() * 800 - 400;
     particle.position.y = Math.random() * 800 - 400;
     particle.position.z = Math.random() * 800 - 400;
@@ -132,6 +161,13 @@ function init() {
 
     particle.castShadow = true;
     particle.receiveShadow = true;
+
+    var child;
+    for (var j = 0, jLen = particle.children.length; j < jLen; ++j) {
+      child = particle.children[j];
+      child.castShadow = true;
+      child.receiveShadow = true;
+    }
 
     scene.add(particle);
   }
@@ -143,6 +179,9 @@ function init() {
 
   // renderer = new THREE.CanvasRenderer();
   renderer = new THREE.WebGLRenderer({antialias: true});
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+
   // renderer.setClearColor(0xf0f0f0);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
