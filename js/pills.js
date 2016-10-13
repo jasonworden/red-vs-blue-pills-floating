@@ -52,19 +52,15 @@ function init() {
 
   // add lighting
 	// scene.fog = new THREE.Fog( 0xAAAAAA, 3000, 5000 );
-	scene.add( new THREE.AmbientLight( 0x666666 ) );
+	scene.add( new THREE.AmbientLight( 0x777777 ) );
 
-	var light = new THREE.DirectionalLight( 0xFFFFFF, 0.7 );
+	var light = new THREE.DirectionalLight( 0xFFFFFF, 0.9 );
 	light.position.set( 200, 500, 500 );
 	scene.add( light );
 
-  light = new THREE.DirectionalLight( 0xFFFFFF, 0.9 );
-  light.position.set( -400, 900, 1200 );
-  scene.add( light );
-
-	// light = new THREE.DirectionalLight( 0xFFFFFF, 0.9 );
-	// light.position.set( -200, -100, -400 );
-	// scene.add( light );
+	light = new THREE.DirectionalLight( 0xFFFFFF, 0.3 );
+	light.position.set( -200, -100, -400 );
+	scene.add( light );
 
   var materialRed = new THREE.MeshPhongMaterial({
     color: 0xff0000,
