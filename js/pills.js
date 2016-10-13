@@ -60,8 +60,15 @@ function init() {
 	light.position.set( -200, -100, -400 );
 	scene.add( light );
 
-  var materialRed = new THREE.MeshPhongMaterial({color: 0xff0000});
-  var materialBlue = new THREE.MeshPhongMaterial({color: 0x0000ff});
+  var materialRed = new THREE.MeshPhongMaterial({
+    color: 0xff0000,
+    shininess: 95
+  });
+  var materialBlue = new THREE.MeshPhongMaterial({
+    color: 0x0000ff,
+    shininess: 40,
+    aoMapIntensity: .1
+  });
   var materials = [materialRed, materialBlue];
   var cylinderGeometryHalfHeight = new THREE.CylinderGeometry(PILL_RADIUS, PILL_RADIUS, PILL_BODY_HEIGHT/2, PILL_SEGMENTS);
   var cylinderGeometry = new THREE.CylinderGeometry(PILL_RADIUS, PILL_RADIUS, PILL_BODY_HEIGHT, PILL_SEGMENTS);
