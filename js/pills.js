@@ -58,9 +58,13 @@ function init() {
 	light.position.set( 200, 500, 500 );
 	scene.add( light );
 
-	light = new THREE.DirectionalLight( 0xFFFFFF, 0.9 );
-	light.position.set( -200, -100, -400 );
-	scene.add( light );
+  light = new THREE.DirectionalLight( 0xFFFFFF, 0.9 );
+  light.position.set( -400, 900, 1200 );
+  scene.add( light );
+
+	// light = new THREE.DirectionalLight( 0xFFFFFF, 0.9 );
+	// light.position.set( -200, -100, -400 );
+	// scene.add( light );
 
   var materialRed = new THREE.MeshPhongMaterial({
     color: 0xff0000,
@@ -101,6 +105,9 @@ function init() {
     scaleFactor = Math.random() * 2 + 1;
     particle.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
+    particle.castShadow = true;
+    particle.receiveShadow = true;
+
     scene.add(particle);
   }
 
@@ -126,6 +133,9 @@ function init() {
 
     scaleFactor = Math.random() * 2 + 1;
     particle.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+    particle.castShadow = true;
+    particle.receiveShadow = true;
 
     scene.add(particle);
   }
